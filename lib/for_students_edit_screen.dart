@@ -1,14 +1,15 @@
 // import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:todo_app/model/student_model.dart';
 
-import 'main.dart';
+// import 'main.dart';
 
 import 'package:todo_app/components/custom_text_fied.dart';
 import 'package:todo_app/components/custom_buttons.dart';
 
 class ForStudentsEditScreen extends StatefulWidget {
-  final Student studentModelForEdit;
+  final StudentModel studentModelForEdit;
   const ForStudentsEditScreen({super.key, required this.studentModelForEdit});
 
   @override
@@ -24,7 +25,7 @@ class _ForStudentsEditScreenState extends State<ForStudentsEditScreen> {
     String fatherName = fatherNameController.text;
 
     if (name.isNotEmpty && fatherName.isNotEmpty) {
-      final newStudent = Student(
+      final newStudent = StudentModel(
         id: widget.studentModelForEdit.id,
         name: name,
         fatherName: fatherName,

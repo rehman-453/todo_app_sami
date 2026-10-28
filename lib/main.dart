@@ -1,23 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/for_students_add_student.dart';
 import 'package:todo_app/for_students_edit_screen.dart';
+import 'package:todo_app/model/student_model.dart';
+import 'package:todo_app/utils/global.dart';
 
 void main() {
   runApp(const StudentApp());
-}
-
-class Student {
-  int id;
-  String name;
-  String fatherName;
-  List<String>? subjects;
-
-  Student({
-    required this.id,
-    required this.name,
-    required this.fatherName,
-    this.subjects,
-  });
 }
 
 class StudentApp extends StatelessWidget {
@@ -40,19 +28,6 @@ class StudentListScreen extends StatefulWidget {
 }
 
 class _StudentListScreenState extends State<StudentListScreen> {
-  // A LIST OF OBJECTS. We type it as List<Student>, but because Student
-  // IS-A Person, every item here also counts as a Person.
-  List<Student> students = [
-    Student(id: 11, name: "name1", fatherName: "fatherName1"),
-    Student(id: 22, name: "name2", fatherName: "fatherName2"),
-    Student(id: 33, name: "name3", fatherName: "fatherName3"),
-  ];
-
-  // A simple counter used to hand out a new id to every new student.
-  int nextId = 1;
-
-  // ---------- FUNCTIONS ----------
-
   // Opens the second screen in "add" mode (no student passed in), then
   // waits for it to send a new Student object back.
   void addStudent(String name, String fatherName) async {
@@ -60,17 +35,17 @@ class _StudentListScreenState extends State<StudentListScreen> {
       context,
       MaterialPageRoute(builder: (context) => ForStudentsAddStudent()),
     );
-    students.add(result);
+    listOfStudents.add(result);
     setState(() {});
   }
 
   void removeStudent(int index) {
     setState(() {
-      students.removeAt(index);
+      listOfStudents.removeAt(index);
     });
   }
 
-  void editStudent(Student studentModelForEdit) async {
+  void editStudent(StudentModel studentModelForEdit) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -80,15 +55,17 @@ class _StudentListScreenState extends State<StudentListScreen> {
     );
     // print("updated name \n${result.name}");
 
-    int foundIndex = students.indexWhere((student) => student.id == result.id);
-    students[foundIndex] = result;
+    int foundIndex = listOfStudents.indexWhere(
+      (student) => student.id == result.id,
+    );
+    listOfStudents[foundIndex] = result;
     setState(() {});
 
     // print("filteredStudent ${filteredStudent.id}");
   }
 
   // Builds one card for a student. Tapping the card opens edit mode.
-  Widget myStudentCard(Student student, int index) {
+  Widget myStudentCard(StudentModel student, int index) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 10),
@@ -104,6 +81,10 @@ class _StudentListScreenState extends State<StudentListScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  'ID: ${student.id}',
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                ),
                 Text(
                   student.name,
                   style: const TextStyle(
@@ -166,14 +147,14 @@ class _StudentListScreenState extends State<StudentListScreen> {
               // list and build a card for it.
               // for (int i = 0; i < students.length; i++)
               ListView.builder(
-                itemCount: students.length,
+                itemCount: listOfStudents.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return myStudentCard(
-                    Student(
-                      id: students[index].id,
-                      name: students[index].name,
-                      fatherName: students[index].fatherName,
+                    StudentModel(
+                      id: listOfStudents[index].id,
+                      name: listOfStudents[index].name,
+                      fatherName: listOfStudents[index].fatherName,
                     ),
                     index,
                   );
